@@ -1,0 +1,52 @@
+# Ez a file az 512kB-os multicart ROM image leírója, amit egy FreePascalban (Lazarusban) írt 
+# parser olvas fel és készíti el belőle az image file-t.
+# Ha egy sor trim után üres vagy # -al kezdődik, akkor a parser azt a sort figyelmen kívül 
+# hagyja. Minden valid sor vagy egy .ptp/.pri file hivatkozást tartalmaz, vagy egy ROM file 
+# felépítéséhez ad útmutatót.
+# - .pri esetben így kell kinézni a sornak:
+#   <filenév>[,<menüben megjelenítendő név>]
+#   ahol a filenév egy relatív filenév (a .plst -hez képest)
+#   opcionálisan vesszővel elválasztva jön a string, ami majd látszódik a primon. Ékezetek
+#   tartalmazhat, de akkor UTF-8 -ban kell kimenteni!
+# - .ptp esetben így kell kinézni a sornak:
+#   <filenév>[:n][,<menüben megjelenítendő név>]
+#   Itt az opcionális :n a lényeg. Ha az nincs megadva, akkor a parser a .ptp file-on belül megkeresi
+#   az első futtatható állományt (basic vagy assembly program) és azt szúrja be az image-be.
+#   Amennyiben van :n tag, úgy a parser megnézi, hogy a .ptp file-ban az n-dik primo file
+#   futtatható-e és ha igen, akkor azt beszúrja.
+# - ROM esetben így kell kinézni a sornak:
+#   <rom felépítése>,<menüben megjelenítendő név>
+#   <rom felépítése>:
+#     <16k-n belüli offset>:<rom file név>[;<rom felépítése>]
+#     Amennyiben egy rom 4 darabból áll, úgy 4db filehivatkozást tartalmaz a <rom felépítése> tag.
+#     - az offset egy decimális szám, 0 és 16535 között
+#     - amennyiben 4db egyenlő méretű darabból áll, úgy az offset rendre: 0, 4096, 8192, 12288 
+#       (és a file-ok mérete 4096 byte)
+#     - a parser sorban dolgozza fel a rom file hivatkozásokat, lehetőség van 'felülírni' a korábban 
+#       meghatározott memóriaterületet.
+# Ha egy sorban a vessző előtti rész (vessző nélkül maga a sor) tartalmazza a '.ptp' vagy a '.pri' 
+# substringet, akkor az a sor .ptp vagy .pri file-nak minősül.
+# A parser az inputfile-okat a .prst file-hoz képest relatív útvonalon keresi (nem lehet abszolút 
+# útvonallal meghatározni a file-okat).
+# A parser maximum 254 db bejegyzést dolgoz fel. Egy file-név hossza tetszőleges lehet, de nem
+# érdemes 20 karakternél hosszabbat választani, mert könnyen kicsúszhat a képernyőről.
+# A filenevek esetében figyelni kell, hogy azok nem tartalmazhatják a fent nevezett különleges
+# karaktereket, úgymint : , ;
+# A generált bináris tartalmat a boot program után a $1000 -es címtől kell bemásolni az EEPROM író
+# programmal a w27C512 ROM területre és így kell megírni az EEPROM -ot.
+#
+# Ezt a file-t (.plst) UTF-8 formátumban kell kimenteni, az ékezetek így maradnak csak meg a primo
+# menüben. A parsernek csak ezt a file-t kell megadni paraméterül és egy .mcrom kiterjesztésű file 
+# lesz az eredmény (bináris file a megadott primo file-ok listájával és a file-ok tartalmával).
+#
+#										Vass Sándor - 2022.06.04.
+
+0:PR_A64-1.ROM;4096:PR_A64-2.ROM;8192:PR_A64-3.ROM;12288:PR_A64-4.ROM,Primo A64
+0:pr_b64.rom,Primo B64
+# 0:CDOSA641.bin;4096:PR_A64-2.ROM;8192:PR_A64-3.ROM;12288:PR_A64-4.ROM,Primo old A64 [CDOS]
+# 0:cDOSA.bin;4096:PR_A64-2.ROM;8192:PR_A64-3.ROM;12288:PR_A64-2.ROM,Primo new A64 [CDOS]
+# 0:pr_b64-cdos.rom;0:cDOSA.bin,Primo B64 [CDOS]
+armageddon.pri,Armageddon
+astroblaster.pri,Astroblaster
+centipede.pri,Centipede
+Manic Miner.ptp,Vili a bányász
