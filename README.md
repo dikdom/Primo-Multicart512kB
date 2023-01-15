@@ -26,13 +26,20 @@ A sources könyvtár tartalma:
 - imagebuild - Ez az imagebuilder pascal forrása. Ezt Lazarusban készítettem. Ha akarod, magadnak lefordíthatod Linux -ra, Max -re is. Win32-re fordított futtatható bináris megtalálható a binaries könvytárban.
 
 ## A működésről néhány szóban
-Ez a verzió (v1.10) már felismeri és kezeli a Primo különböző memóriakonfigurációjú gépeit. Figyelem, a kártya RAM-ot nem tud bőviteni, azaz egy A32-es gép (16kB RAM) nem fog tudni betölteni egy 17kB -os programot továbbra sem!!
+Ez a verzió (v1.10) már felismeri és kezeli a Primo különböző memóriakonfigurációjú gépeit. Figyelem!! A kártya RAM-ot nem tud bőviteni, azaz egy A32-es gép (16kB RAM) nem fog tudni betölteni egy 17kB -os programot továbbra sem!!
 A kártyán található LED akkor világít, ha a kártyán található EEPROM használatban van (pl lista betöltéskor villog, mert az egyes listaelemeket egyesével tölti be, vagy ha egy ROM-ot indítunk, akkor a LED világít, hiszen az van kiválasztva használatra).
-A kártyán található RESET gomb a Primo gépet reseteli és nem az beépített NMI híváson keresztül, hanem valódi, hardver reset történik.
-Az adott listában többféle program kaphat helyet:
-- ROM image: ez ugye a Primo ROMját tudja lecserélni (A típusú gépre mondjuk B típusúra)
-- ptp file: ez egy szalag kép, akár több programmal. Ebből csak egyet tud betölteni a multicart. Vagy az első betölthető állományt, vagy a .plst file-ban kiválasztottat
+A kártyán található RESET gomb a Primo gépet reseteli és nem a beépített NMI híváson keresztül, hanem valódi, hardver reset történik.
+
+A generált listában többféle program kaphat helyet:
+- ROM image: ez ugye a Primo ROMját tudja lecserélni (A típusú gépben mondjuk B típusú ROM-ra) anélkül, hogy cserélni kellen a ROM-okat az alaplapon
+- ptp file: ez egy szalag kép, akár több programmal. Ebből csak egyet tud betölteni a multicart. Vagy az első betölthető állományt, vagy a .plst file-ban kiválasztottat (lásd: template-ben a leírást!)
 - pri file: ez pedig egy sima program file
-Arra is lehetőség van, hogy egy program futtatása során a Primóban aktuális ROM-ot lecseréljük (azaz mondjuk A64 gépünk van, de B ROM kell a programhoz). Ekkor SPACE-el kijelüljük a kívánt ROM képet, majd a programot elindítjuk a szokásos RETURN gombbal. Nyilván elindíthatjuk a kiválasztott ROM-ot is a RET gombbal, de akkor ugye nem tölt be semmilyen programot, arról magunknak kell gondoskodni.
-És végül lehetőség van arra is, hogy ne használjuk multicart nyújtotta lehetőségeket, ekkor a BRK gombot kell megnyomni és ilyenkor a Primo elindul úgy, mintah nem lenne a MultiCart bedugva.
+
+Arra is lehetőség van, hogy egy program futtatása során a Primóban aktuális ROM-ot lecseréljük (azaz mondjuk A64 gépünk van, de B ROM kell a programhoz). Ekkor SPACE-el kijelöljük a kívánt ROM képet, majd a programot elindítjuk a szokásos RETURN gombbal. Nyilván elindíthatjuk a kiválasztott ROM-ot is a RET gombbal, de akkor ugye nem tölt be semmilyen programot, arról magunknak kell gondoskodni.
+
 A listában éredemes a ROM file-okat előre helyezni, onnan könnyebben lehet azokból választani.
+
+Lehetőség van arra is, hogy ne használjuk multicart nyújtotta lehetőségeket, ekkor a BRK gombot kell megnyomni és ilyenkor a Primo elindul úgy, mintha nem lenne a MultiCart bedugva.
+
+A listában a nyilakkal vagy az AY és ÉÁ gombokkal lehet navigálni.
+
